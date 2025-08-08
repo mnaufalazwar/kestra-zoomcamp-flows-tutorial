@@ -27,3 +27,24 @@ tasks:
     password: "{{kv('GITHUB_ACCESS_TOKEN')}}"
     branch: develop
     commitMessage: add flows {{ now() }}
+
+  - id: push_namespace_files
+    type: io.kestra.plugin.git.PushNamespaceFiles
+    namespace: zoomcamp               # from sourceNamespace in push_flows
+    files: "*"                         # or list of specific files if needed
+    gitDirectory: _files               # folder in GitHub repo for namespace files
+    url: "{{ vars.gh_repo }}"
+    username: "{{ vars.gh_username }}"
+    password: "{{ kv('GITHUB_ACCESS_TOKEN') }}"
+    branch: develop
+    commitMessage: "add namespace files {{ now() }}"
+
+  - id: create_pr
+    type: io.kestra.plugin.github.pulls.Create
+    oauthToken: "{{ kv('GITHUB_ACCESS_TOKEN') }}"
+    repository: mnaufalazwar/kestra-zoomcamp-flows-tutorial
+    sourceBranch: develop
+    targetBranch: main
+    title: Merge develop to main
+    body: "Request to merge changes from develop into main"
+
