@@ -1,0 +1,46 @@
+id: 04_gcp_kv
+namespace: zoomcamp
+
+tasks:
+  - id: gcp_creds
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_CREDS
+    kvType: JSON
+    value: |
+      {
+        "type": "service_account",
+        "project_id": "zoomcamp-468211",
+        "private_key_id": "334e2f72157827a78d8d09a53bc29348af8f1bc1",
+        "private_key": "",
+        "client_email": "zoomcamp@zoomcamp-468211.iam.gserviceaccount.com",
+        "client_id": "115033832325699678840",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/zoomcamp%40zoomcamp-468211.iam.gserviceaccount.com",
+        "universe_domain": "googleapis.com"
+      }
+
+  - id: gcp_project_id
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_PROJECT_ID
+    kvType: STRING
+    value: zoomcamp-468211 # TODO replace with your project id
+
+  - id: gcp_location
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_LOCATION
+    kvType: STRING
+    value: europe-west2
+
+  - id: gcp_bucket_name
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_BUCKET_NAME
+    kvType: STRING
+    value: bucket-zoomcamp-468211 # TODO make sure it's globally unique!
+
+  - id: gcp_dataset
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_DATASET
+    kvType: STRING
+    value: zoomcamp

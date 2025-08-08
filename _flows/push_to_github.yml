@@ -16,9 +16,11 @@ tasks:
       - 02_postgres_taxi
       - 02_postgres_taxi_scheduled
       - 03_postgres_dbt
+      - 04_gcp_kv
       - 05_gcp_setup
       - 06_gcp_taxi
       - 07_gcp_dbt
+      - 08_kv_github
       - push_to_github
     includeChildNamespaces: true
     gitDirectory: _flows

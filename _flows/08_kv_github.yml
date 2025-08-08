@@ -1,0 +1,9 @@
+id: 08_kv_github
+namespace: zoomcamp
+
+tasks:
+  - id: github_access_token
+    type: io.kestra.plugin.core.kv.Set
+    key: GITHUB_ACCESS_TOKEN
+    kvType: STRING
+    value: 
