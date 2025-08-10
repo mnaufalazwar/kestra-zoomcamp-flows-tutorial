@@ -4,7 +4,7 @@ namespace: company.team
 tasks:
   - id: hi
     type: io.kestra.plugin.core.log.Log
-    message: Hi Ho!
+    message: Hi Ho yoyo!
 
 triggers:
   - id: every_minute
