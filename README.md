@@ -63,9 +63,9 @@ services:
 
 7. encode creds:
 - if it is file: 
--- on linux : printf '%s' "$ENCODED" | base64 -D | jq . >/dev/null && echo OK || echo BAD
-              # Encode, single line
-              base64 -w 0 gcp-creds-taxi.json
+-- on linux :
+printf '%s' "$ENCODED" | base64 -D | jq . >/dev/null && echo OK || echo BAD
+Encode, single line :base64 -w 0 gcp-creds-taxi.json
 -- on mac: base64 < your-sa.json | tr -d '\n'
               
 - if it is string: echo -n "BLABLABLA" | base64
