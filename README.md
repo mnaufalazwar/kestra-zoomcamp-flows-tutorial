@@ -7,7 +7,7 @@ to run kestra on google cloud compute engine:
 4. create postgres at google cloud -> allow private IP
 5. create bucket -> crete service account to access bucket
 6. use this docker-compose.yml : 
-***
+```
 volumes:
   postgres-data:
     driver: local
@@ -59,7 +59,7 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-***
+```
 
 7. encode creds:
 - if it is file: 
