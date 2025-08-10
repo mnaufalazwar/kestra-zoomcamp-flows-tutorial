@@ -26,3 +26,23 @@ jobs:
           server: http://34.116.118.43:8080
           user: ${{ secrets.KESTRA_USER }}
           password: ${{ secrets.KESTRA_PASSWORD }}
+
+  # If validation passed, deploy resources
+  deploy:
+    runs-on: ubuntu-latest
+    name: Kestra deploy
+    steps:
+      # We can only deploy to one namespace at once,
+      # so we have two different steps for our two namespaces product and engineering
+      - name: Checkout repo content
+        uses: actions/checkout@v4
+      - name: Deploy flows
+        uses: kestra-io/deploy-action@master
+        with:
+          namespace: company.team
+          directory: ./_flows
+          resource: flow
+          server: http://34.116.118.43:8080
+          user: ${{ secrets.KESTRA_USER }}
+          password: ${{ secrets.KESTRA_PASSWORD }}
+
