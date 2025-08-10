@@ -28,7 +28,7 @@ services:
       - /tmp/kestra-wd:/tmp/kestra-wd
     environment:
       SECRET_GITHUB_ACCESS_TOKEN: <ENCODE BASE64 GITHUB ACCESS TOKEN>
-      SECRET_GCP_CREDS: <ENCODE BASE64 SERVICE ACCOUNT TO ACCESS BUCKET AND BIG QUERY FOR OUR FLOW>
+      SECRET_GCP_CREDS: <ENCODE BASE64 SERVICE ACCOUNT TO ACCESS BUCKET AND BIG QUERY FOR DATA PIPELINE>
       KESTRA_CONFIGURATION: |
         datasources:
           postgres:
@@ -49,7 +49,7 @@ services:
             gcs:
               bucket: kestra-storage-falazwar
               project-id: zoomcamp-468211
-              serviceAccount: <SERVICE ACCOUNT TO BUCKET FOR KESTRA STOGARE IN ONE LINE (STRINGIFY)>
+              serviceAccount: <SERVICE ACCOUNT TO BUCKET FOR KESTRA STOGARE IN ONE LINE (STRINGIFY) INSIDE "">
           queue:
             type: postgres
           tasks:
