@@ -273,28 +273,3 @@ triggers:
     cron: "0 10 1 * *"
     inputs:
       taxi: yellow
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

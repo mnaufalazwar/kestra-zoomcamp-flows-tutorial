@@ -1,14 +1,18 @@
 id: 06_gcp_taxi_scheduled
 namespace: zoomcamp
 description: |
-  The CSV Data used in the course: https://github.com/DataTalksClub/nyc-tlc-data/releases
+  The CSV Data used in the course: 
+    https://github.com/DataTalksClub/nyc-tlc-data/releases
+    https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-01.csv.gz
 
 inputs:
   - id: taxi
     type: SELECT
     displayName: Select taxi type
-    values: [yellow, green]
-    defaults: green
+    values:
+      - "yellow"
+      - "green"
+    defaults: yellow
 
 variables:
   file: "{{inputs.taxi}}_tripdata_{{trigger.date | date('yyyy-MM')}}.csv"
@@ -248,8 +252,3 @@ triggers:
     cron: "0 10 1 * *"
     inputs:
       taxi: yellow
-
-
-
-
-

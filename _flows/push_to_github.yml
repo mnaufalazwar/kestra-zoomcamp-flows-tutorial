@@ -27,7 +27,7 @@ tasks:
     gitDirectory: _flows
     url: "{{ vars.gh_repo }}"
     username: "{{ vars.gh_username }}"
-    password: "{{kv('GITHUB_ACCESS_TOKEN')}}"
+    password: "{{secret('GITHUB_ACCESS_TOKEN')}}"
     branch: develop
     commitMessage: add flows {{ now() }}
 
@@ -38,16 +38,15 @@ tasks:
     gitDirectory: _files               # folder in GitHub repo for namespace files
     url: "{{ vars.gh_repo }}"
     username: "{{ vars.gh_username }}"
-    password: "{{ kv('GITHUB_ACCESS_TOKEN') }}"
+    password: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
     branch: develop
     commitMessage: "add namespace files {{ now() }}"
 
   - id: create_pr
     type: io.kestra.plugin.github.pulls.Create
-    oauthToken: "{{ kv('GITHUB_ACCESS_TOKEN') }}"
+    oauthToken: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
     repository: mnaufalazwar/kestra-zoomcamp-flows-tutorial
     sourceBranch: develop
     targetBranch: main
     title: Merge develop to main
     body: "Request to merge changes from develop into main"
-

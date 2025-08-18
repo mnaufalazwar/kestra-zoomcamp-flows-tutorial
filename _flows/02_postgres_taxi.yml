@@ -266,30 +266,3 @@ pluginDefaults:
       url: jdbc:postgresql://host.docker.internal:5433/postgres-zoomcamp
       username: kestra
       password: k3str4
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
