@@ -1,0 +1,77 @@
+id: 06_gcp_fhv_scheduled
+namespace: zoomcamp
+description: |
+  The CSV Data used in the course: 
+    https://github.com/DataTalksClub/nyc-tlc-data/releases
+    https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-01.csv.gz
+
+inputs:
+  - id: fhv
+    type: SELECT
+    displayName: Select fhv type
+    values:
+      - "fhv"
+    defaults: fhv
+
+variables:
+  file: "{{inputs.fhv}}_tripdata_{{trigger.date | date('yyyy-MM')}}.csv"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/{{vars.file}}"
+  table: "{{kv('GCP_DATASET')}}.{{inputs.fhv}}_tripdata_{{trigger.date | date('yyyy_MM')}}"
+  data: "{{outputs.extract.outputFiles[inputs.fhv ~ '_tripdata_' ~ (trigger.date | date('yyyy-MM')) ~ '.csv']}}"
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      fhv: "{{inputs.fhv}}"
+
+  - id: extract
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "*.csv"
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -qO- https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{{inputs.fhv}}/{{render(vars.file)}}.gz | gunzip > {{render(vars.file)}}
+
+  - id: upload_to-gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{render(vars.data)}}"
+    to: "{{render(vars.gcs_file)}}"
+
+  - id: dlt_load
+    type: io.kestra.plugin.scripts.python.Script
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      image: python:3.11-slim
+    env:
+      SECRET_GCP_CREDS: "{{secret('GCP_CREDS')}}"
+      CSV_URI: "{{render(vars.gcs_file)}}"
+      BQ_DATASET: "{{kv('GCP_DATASET')}}"
+      BQ_STG_TABLE: "fhv_tripdata_{{trigger.date | date('yyyy_MM')}}"
+      DESTINATION__BIGQUERY__LOCATION: "europe-west2"
+    beforeCommands:
+      - pip install --no-cache-dir dlt google-cloud-bigquery google-cloud-bigquery-storage pandas gcsfs
+    script: |
+      {{ read("scripts/fhv_dlt.py") }}
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{secret('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: fhv_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"
+    inputs:
+      fhv: fhv
