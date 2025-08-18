@@ -20,6 +20,7 @@ tasks:
       - 05_gcp_setup
       - 06_gcp_taxi
       - 06_gcp_taxi_scheduled
+      - 06_gcp_fhv_scheduled
       - 07_gcp_dbt
       - 08_kv_github
       - push_to_github
