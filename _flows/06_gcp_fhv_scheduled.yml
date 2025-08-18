@@ -50,7 +50,9 @@ tasks:
       CSV_URI: "{{render(vars.gcs_file)}}"
       BQ_DATASET: "{{kv('GCP_DATASET')}}"
       BQ_STG_TABLE: "fhv_tripdata_{{trigger.date | date('yyyy_MM')}}"
+      BQ_MAIN_TABLE: "fhv_tripdata"
       DESTINATION__BIGQUERY__LOCATION: "europe-west2"
+      FILE_NAME: "{{render(vars.file)}}"
     beforeCommands:
       - pip install --no-cache-dir dlt google-cloud-bigquery google-cloud-bigquery-storage pandas gcsfs
     script: |
