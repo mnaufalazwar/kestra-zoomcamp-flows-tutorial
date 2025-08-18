@@ -35,8 +35,9 @@ tasks:
   - id: push_namespace_files
     type: io.kestra.plugin.git.PushNamespaceFiles
     namespace: zoomcamp               # from sourceNamespace in push_flows
-    files: "*"                         # or list of specific files if needed
-    gitDirectory: _files               # folder in GitHub repo for namespace files
+    files:                            # or list of specific files if needed
+      - "**/*"  
+    gitDirectory: _files              # folder in GitHub repo for namespace files
     url: "{{ vars.gh_repo }}"
     username: "{{ vars.gh_username }}"
     password: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
