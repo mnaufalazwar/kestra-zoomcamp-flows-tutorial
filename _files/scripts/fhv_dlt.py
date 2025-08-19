@@ -3,6 +3,28 @@ import pandas as pd
 import dlt
 import hashlib
 
+# to handle different column names format
+ALIASES = {
+  "dispatching_base_num": ["dispatching_base_num"],
+  "pickup_datetime": ["pickup_datetime"],
+  "dropoff_datetime": ["dropoff_datetime", "dropOff_datetime"],
+  "pu_location_id": ["PUlocationID", "PULocationID", "pulocationid"],
+  "do_location_id": ["DOlocationID", "DOLocationID", "dolocationid"],
+  "sr_flag": ["SR_Flag", "sr_flag"],
+  "affiliated_base_number": ["Affiliated_base_number", "affiliated_base_number"]
+}
+
+def _standardized_col_names(df:pd.DataFrame) -> pd.DataFrame:
+  rename_map = {}
+  lower_to_actual_names = {col.lower() : col for col in df.columns}
+  for canon, candidates in ALIASES.items():
+    for candidate in candidates:
+      actual = lower_to_actual_names.get(candidate.lower())
+      if actual:
+        rename_map[actual] = canon
+        break
+  return df.rename(columns=rename_map)
+
 def _adc_from_env_to_file() -> str:
     """
     read gcp sa json (raw or base 64) from env GCP_SA_JSON,
@@ -31,16 +53,17 @@ def _get_dlt_resource(table_name: str, csv_uri: str, creds_path: str):
           chunksize=100_000, 
           storage_options={"token": creds_path}
       ):
+        chunk = _standardized_col_names(chunk)
         yield from chunk.to_dict("records")
   return _fhv_from_gcs
 
 def _adding_unique_row_id_and_filename(chunk: pd.DataFrame):
   dispatching_base_num = chunk.get("dispatching_base_num").astype("string").fillna("")
   pickup_datetime = chunk.get("pickup_datetime").astype("string").fillna("")
-  dropOff_datetime = chunk.get("dropOff_datetime").astype("string").fillna("")
-  PUlocationID = chunk.get("PUlocationID").astype("string").fillna("")
-  DOlocationID = chunk.get("DOlocationID").astype("string").fillna("")
-  temp_id = dispatching_base_num + pickup_datetime + dropOff_datetime + PUlocationID + DOlocationID
+  dropoff_datetime = chunk.get("dropoff_datetime").astype("string").fillna("")
+  pu_location_id = chunk.get("pu_location_id").astype("string").fillna("")
+  do_location_id = chunk.get("do_location_id").astype("string").fillna("")
+  temp_id = dispatching_base_num + pickup_datetime + dropoff_datetime + pu_location_id + do_location_id
   chunk["unique_row_id"] = temp_id.apply(
     lambda x: hashlib.md5(x.encode("utf-8")).hexdigest()
   )
@@ -57,6 +80,7 @@ def _get_dlt_resource_main(table_name: str, csv_uri: str, creds_path: str):
           chunksize=100_000, 
           storage_options={"token": creds_path}
       ):
+        chunk = _standardized_col_names(chunk)
         chunk = _adding_unique_row_id_and_filename(chunk)
         yield from chunk.to_dict("records")
   return _fhv_from_gcs
