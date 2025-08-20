@@ -1,0 +1,44 @@
+id: sync_zoomcamp_from_git_mnaufalazwar
+namespace: zoomcamp
+
+variables:
+  gh_username: mnaufalazwar
+  gh_repo: https://github.com/mnaufalazwar/kestra-zoomcamp-flows-tutorial
+
+tasks:
+  - id: sync_flows
+    type: io.kestra.plugin.git.SyncFlows
+    gitDirectory: _flows
+    targetNamespace: zoomcamp                 # Where flows will be imported in Kestra
+    includeChildNamespaces: true
+    delete: true                               # Delete flows in Kestra not in GitHub
+    url: "{{ vars.gh_repo }}"
+    branch: develop                            # Or main, depending on your repo
+    username: "{{ vars.gh_username }}"
+    password: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
+
+  - id: sync_namespace_files
+    type: io.kestra.plugin.git.SyncNamespaceFiles
+    namespace: zoomcamp
+    gitDirectory: _files
+    delete: true
+    url: "{{ vars.gh_repo }}"
+    branch: main
+    username: "{{ vars.gh_username }}"
+    password: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
+
+triggers:
+  - id: every_full_hour
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/1 * * * *"
+    disabled: true
+
+
+
+
+
+
+
+
+
+

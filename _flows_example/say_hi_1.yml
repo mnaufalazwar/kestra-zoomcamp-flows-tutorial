@@ -4,10 +4,11 @@ namespace: company.team
 tasks:
   - id: hi
     type: io.kestra.plugin.core.log.Log
-    message: Hi Ho yoyo from github!
+    message: Hi Ho yoyo from kestra!
 
 triggers:
   - id: every_minute
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "*/1 * * * *"
     disabled: true
+
