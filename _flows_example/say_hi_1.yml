@@ -11,3 +11,4 @@ triggers:
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "*/1 * * * *"
     disabled: true
+
