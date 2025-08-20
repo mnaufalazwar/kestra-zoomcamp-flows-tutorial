@@ -1,4 +1,4 @@
-id: say_hi
+id: say_hi_1
 namespace: company.team
 
 tasks:
@@ -10,3 +10,4 @@ triggers:
   - id: every_minute
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "*/1 * * * *"
+    disabled: true
