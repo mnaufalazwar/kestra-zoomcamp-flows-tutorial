@@ -45,6 +45,31 @@ tasks:
     branch: develop
     commitMessage: "add namespace files {{ now() }}"
 
+  - id: push_flows_company
+    type: io.kestra.plugin.git.PushFlows
+    sourceNamespace: company.team
+    targetNamespace: company.team
+    flows:
+      - 02_postgres_taxi
+      - 02_postgres_taxi_scheduled
+      - 03_postgres_dbt
+      - 04_gcp_kv
+      - 05_gcp_setup
+      - 06_gcp_taxi
+      - 06_gcp_taxi_scheduled
+      - 06_gcp_fhv_scheduled
+      - 07_gcp_dbt
+      - 08_kv_github
+      - push_to_github
+      - say_hi
+    includeChildNamespaces: true
+    gitDirectory: _flows
+    url: "{{ vars.gh_repo }}"
+    username: "{{ vars.gh_username }}"
+    password: "{{secret('GITHUB_ACCESS_TOKEN')}}"
+    branch: develop
+    commitMessage: add flows {{ now() }}
+
   - id: create_pr
     type: io.kestra.plugin.github.pulls.Create
     oauthToken: "{{ secret('GITHUB_ACCESS_TOKEN') }}"
