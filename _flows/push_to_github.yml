@@ -51,6 +51,7 @@ tasks:
     targetNamespace: company.team
     flows:
       - say_hi
+      - say_hi_1
     includeChildNamespaces: true
     gitDirectory: _flows_example
     url: "{{ vars.gh_repo }}"
